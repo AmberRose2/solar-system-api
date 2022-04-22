@@ -1,6 +1,5 @@
 from flask import Blueprint, jsonify
 
-
 class Planet:
     def __init__(self, id, description, name, distance_from_sun):
         self.id = id
@@ -32,4 +31,3 @@ def list_planets():
             "distance from sun" : planet.distance_from_sun
         })
     return jsonify(planets_response)
-
