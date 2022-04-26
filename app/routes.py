@@ -20,6 +20,21 @@ planets = [
 
 planets_bp = Blueprint("planets", __name__, url_prefix = "/planets")
 
+def validate_planet(planet_id):
+    try:
+        planet_id = int(planet_id)
+    except ValueError:
+        return jsonify({"message" : f"'{planet_id}' is invalid. ID must be an integer"})
+
+    for planet in planets:
+        if planet_id == planet.id:
+            return planet
+    
+    return jsonify({"message" : f"'{planet_id}' does not exist"})
+    
+
+
+
 @planets_bp.route("", methods = ["GET"])
 def list_planets():
     planets_response = []
