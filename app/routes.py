@@ -24,13 +24,18 @@ def validate_planet(planet_id):
     try:
         planet_id = int(planet_id)
     except ValueError:
-        return jsonify({"message" : f"'{planet_id}' is invalid. ID must be an integer"})
+        return jsonify({"message" : f"'{planet_id}' is invalid. ID must be an integer"}), 400
 
     for planet in planets:
         if planet_id == planet.id:
-            return planet
+            return jsonify({
+        "id" : planet.id,
+        "name" : planet.name,
+        "description" : planet.description,
+        "distance from sun" : planet.distance_from_sun
+    })
     
-    return jsonify({"message" : f"'{planet_id}' does not exist"})
+    return jsonify({"message" : f"'{planet_id}' does not exist"}), 404
     
 
 
@@ -51,10 +56,4 @@ def list_planets():
 def single_planet(planet_id):
     planet = validate_planet(planet_id)
 
-
-    return {
-        "id" : planet.id,
-        "name" : planet.name,
-        "description" : planet.description,
-        "distance from sun" : planet.distance_from_sun
-    }
+    return planet
