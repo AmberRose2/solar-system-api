@@ -46,3 +46,15 @@ def list_planets():
             "distance from sun" : planet.distance_from_sun
         })
     return jsonify(planets_response)
+
+@planets_bp.route("/<planet_id>", methods = ["GET"])
+def single_planet(planet_id):
+    planet = validate_planet(planet_id)
+
+
+    return {
+        "id" : planet.id,
+        "name" : planet.name,
+        "description" : planet.description,
+        "distance from sun" : planet.distance_from_sun
+    }
