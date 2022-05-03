@@ -1,10 +1,24 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, abort, make_response
 from app import db
 from app.models.planet import Planet
 
 
 
 planets_bp = Blueprint("planets", __name__, url_prefix = "/planets")
+
+def validate_planet(planet_id):
+    try:
+        planet_id = int(planet_id)
+    except ValueError:
+        return jsonify({"message" : f"'{planet_id}' is invalid. ID must be an integer"}), 400
+
+    planet = Planet.query.get(planet_id)
+
+    if not planet:
+        return jsonify({"message" : f"Could not find '{planet_id}'"}), 404
+
+    return planet
+
 
 @planets_bp.route('', methods=['POST'])
 def create_planet():
@@ -38,6 +52,16 @@ def get_all_planets():
             }
         )
     return jsonify(response)
+
+@planets_bp.route("/<planet_id>", methods=["GET"])
+def get_one_planet(planet_id):
+    planet = validate_planet(planet_id)
+    return {
+        "name" : planet.name,
+        "description" : planet.description,
+        "distance_from_sun" : planet.distance_from_sun
+    }  
+
 
 
 
