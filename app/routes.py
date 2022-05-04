@@ -40,8 +40,9 @@ def create_planet():
 @planets_bp.route('', methods=['GET'])
 def get_all_planets():
 
-    name_query = request.args.get("name").capitalize()
+    name_query = request.args.get("name")
     if name_query:
+        name_query = name_query.capitalize()
         planets = Planet.query.filter_by(name = name_query)
     else:
         planets = Planet.query.all()
